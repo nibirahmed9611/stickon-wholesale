@@ -19,7 +19,7 @@
                     @endif
 
                     
-                    <table class="table table-striped table-bordered table-hover">
+                    <table class="table table-striped table-bordered table-hover table-responsive-md">
                         <thead>
                             <tr>
                                 <th>User</th>
@@ -48,7 +48,9 @@
                                     <td><a href="{{ route('orders.show',['order'=>$order->id]) }}">Show</a></td>
                                 </tr>
                             @empty
-                                {{ __('No Orders Found') }}
+                                <tr>
+                                    <td colspan="9">{{ __('No Orders Found') }}</td>
+                                </tr> 
                             @endforelse
                         </tbody>
                     </table>

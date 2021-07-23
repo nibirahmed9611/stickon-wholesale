@@ -1,14 +1,27 @@
 @extends('layouts.app')
 
 @section('content')
+
+    
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
+            @if (session()->has('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
             <div class="card">
-                <div class="card-header">{{ __('Register') }}</div>
+                <div class="card-header">{{ __('Add User') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
+                    @if (session('status'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+
+                    <form method="POST" action="{{ route("user.store") }}">
                         @csrf
 
                         <div class="form-group row">
@@ -68,6 +81,25 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="role" class="col-md-4 col-form-label text-md-right">{{ __('Role') }}</label>
+
+                            <div class="col-md-6">
+
+                                <select name="role" class="form-control">
+                                    <option value="Customer">Admin</option>
+                                    <option value="Customer">Customer</option>
+                                    <option value="Customer">Viewer</option>
+                                </select>
+
+                                @error('role')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
 
                             <div class="col-md-6">
@@ -102,4 +134,6 @@
         </div>
     </div>
 </div>
+
+
 @endsection

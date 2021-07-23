@@ -7,6 +7,7 @@
                     {{ session('success') }}
                 </div>
             @endif
+            <a href="{{ route("product.create") }}" class="btn btn-primary mb-2">Add Product</a>
             <div class="card">
                 <div class="card-header"><b>{{ __('All Products') }}</b></div>
 
@@ -19,7 +20,7 @@
                     @endif
 
                     
-                    <table class="table table-striped table-bordered table-hover">
+                    <table class="table table-responsive-md table-striped table-bordered table-hover">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -36,7 +37,9 @@
                                     <td>{{ $product->quantity }}</td>
                                 </tr>
                             @empty
-                                {{ __('No Products Found') }}
+                                <tr>
+                                    <td colspan="3">{{ __('No Products Found') }}</td>
+                                </tr>
                             @endforelse
                         </tbody>
                     </table>

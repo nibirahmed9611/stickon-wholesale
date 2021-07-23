@@ -1,8 +1,10 @@
 <?php
 
-use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ProductController;
 
 /*
@@ -30,3 +32,4 @@ Route::resource('orders', OrderController::class);
 Route::get('order',[ OrderController::class,'makeOrder' ])->name('order');
 
 Route::resource('account', AccountController::class);
+Route::resource('user', UserController::class);

@@ -37,10 +37,11 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-                        <li class="navbar-item"><a href="{{ route('product.index') }}" class="navbar-link mx-3 text-dark">All Products</a></li>
-                        <li class="navbar-item"><a href="{{ route('product.create') }}" class="navbar-link mx-3 text-dark">Add Products</a></li>
-                        <li class="navbar-item"><a href="{{ route('orders.index') }}" class="navbar-link mx-3 text-dark">All Order</a></li>
+                        <li class="navbar-item"><a href="{{ route('product.index') }}" class="navbar-link mx-3 text-dark">Products</a></li>
+                        <li class="navbar-item"><a href="{{ route('orders.index') }}" class="navbar-link mx-3 text-dark">Orders</a></li>
+                        <li class="navbar-item"><a href="{{ route('account.index') }}" class="navbar-link mx-3 text-dark">Accounts</a></li>
                         <li class="navbar-item"><a href="{{ route('order') }}" class="navbar-link mx-3 text-dark">Order</a></li>
+                        <li class="navbar-item"><a href="{{ route('user.index') }}" class="navbar-link mx-3 text-dark">User</a></li>
                     </ul>
                     
                     <!-- Right Side Of Navbar -->

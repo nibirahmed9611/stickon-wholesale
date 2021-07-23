@@ -77,6 +77,7 @@
                             </table>
                             <div class="row">
                                 <div class="col">
+                                    <a href="{{ route("orders.index") }}" class="btn btn-info text-light">Back</a>
                                     @error('discount') <span class="text-danger">{{ $message }}</span> @enderror
                                     @error('paid') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
