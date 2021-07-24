@@ -2,9 +2,9 @@
 
 namespace App\Http\Livewire\Product;
 
+use App\Models\Attribute;
 use App\Models\Product;
 use Livewire\Component;
-use App\Models\Attribute;
 
 class CreateProduct extends Component {
 
@@ -19,7 +19,7 @@ class CreateProduct extends Component {
     protected $rules = [
         'product.name'     => 'required|string',
         'product.price'    => 'required|integer',
-        'product.quantity' => 'required|integer',
+        'product.quantity' => 'required|integer|numeric|min:0',
     ];
 
     public function addMore() {
@@ -35,11 +35,12 @@ class CreateProduct extends Component {
 
         foreach ( $this->attributes as $attribute ) {
             Attribute::create( [
-                'value'       => $attribute,
+                'value'      => $attribute,
                 'product_id' => $product,
             ] );
         }
-        session()->flash('success','Product added successfully');
+
+        session()->flash( 'success', 'Product added successfully' );
 
         $this->mount();
         $this->attributes = [];

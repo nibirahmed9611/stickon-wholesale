@@ -31,6 +31,7 @@
                                 <th>Status</th>
                                 <th>Placed at</th>
                                 <th>Products</th>
+                                <th>Delete</th>
                             </tr>
                         </thead>
                         
@@ -45,11 +46,12 @@
                                     <td>{{ $order->due }}</td>
                                     <td>{{ $order->status }}</td>
                                     <td>{{ $order->created_at->format("d-M-Y | h:i a") }}</td>
-                                    <td><a href="{{ route('orders.show',['order'=>$order->id]) }}">Show</a></td>
+                                    <td><a class="btn btn-primary" href="{{ route('orders.show',['order'=>$order->id]) }}">Show</a></td>
+                                    <td><button class="btn btn-danger" wire:click="delete({{ $order->id }})" data-toggle="modal" data-target="#exampleModal">Delete</button></td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="9">{{ __('No Orders Found') }}</td>
+                                    <td colspan="10">{{ __('No Orders Found') }}</td>
                                 </tr> 
                             @endforelse
                         </tbody>
@@ -59,8 +61,33 @@
 
                 </div>
             </div>
+
+            <div wire:ignore.self class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Delete Confirm</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                 <span aria-hidden="true close-btn">×</span>
+                            </button>
+                        </div>
+                       <div class="modal-body">
+                            <p>Are you sure want to delete?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">Close</button>
+                            <button type="button" wire:click="modalDelete()" class="btn btn-danger close-modal" data-dismiss="modal">Yes, Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
         </div>
     </div>
 </div>
+
+
 
 

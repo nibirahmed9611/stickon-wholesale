@@ -2,13 +2,15 @@
 
 namespace App\Http\Livewire\Order;
 
-use App\Models\Account;
+use App\Models\Media;
 use App\Models\Order;
-use App\Models\OrderProduct;
+use App\Models\Account;
 use App\Models\Product;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use App\Models\OrderProduct;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class MakeOrder extends Component {
 
@@ -63,7 +65,7 @@ class MakeOrder extends Component {
      */
     public function order() {
 
-        // dd($this->orderProducts);
+// dd($this->orderProducts);
 
         // Check the stock
         $productAndQuantity = array();
@@ -89,7 +91,8 @@ class MakeOrder extends Component {
             if ( $orderProduct['attribute'] == null || $orderProduct['attribute'] == "null" ) {
                 $this->productErrors[] = "Please choose size/model for all products";
                 return;
-            } 
+            }
+
         }
 
         foreach ( $productAndQuantity as $key => $orderQuantity ) {
@@ -106,10 +109,11 @@ class MakeOrder extends Component {
             return;
         }
 
-        DB::transaction(function () use ( $totalPrice, $productAndQuantity ) {
+        DB::transaction( function () use ( $totalPrice, $productAndQuantity ) {
+
             // Make an order
             $order = Order::create( [
-                'user_id'  => 1, // Auth::user()->id
+                'user_id'  => Auth::user()->id, // Auth::user()->id
                 'subtotal' => $totalPrice,
                 'discount' => 0,
                 'total'    => $totalPrice,
@@ -118,15 +122,26 @@ class MakeOrder extends Component {
                 'status'   => "Pending Payment",
             ] );
 
-            // Assign all the products to the order and transfer the images
+// Assign all the products to the order and transfer the images
+
             foreach ( $this->orderProducts as $orderedProduct ) {
-                OrderProduct::create( [
+
+                $orderProduct = OrderProduct::create( [
                     'order_id'     => $order->id,
                     'product_id'   => $orderedProduct['product'],
                     'attribute_id' => $orderedProduct['attribute'],
                     'quantity'     => $orderedProduct['quantity'],
                     'staus'        => "Incomplete",
                 ] );
+
+                if ( $orderedProduct['photo'] ) {
+                    $uploadedPhoto = $orderedProduct['photo']->store( 'photos', 'public' );
+
+                    Media::create( [
+                        'order_product_id' => $orderProduct->id,
+                        'path'             => $uploadedPhoto,
+                    ] );
+                }
             }
 
             // Remove from stock
@@ -141,13 +156,12 @@ class MakeOrder extends Component {
 
             // Create a new account(p/m)
             Account::create( [
-                'order_id'  => $order->id,
-                'name'      => "Order ", // Auth::user()->name
-                'value'     => $totalPrice,
-                'pm'        => "Plus",
+                'order_id' => $order->id,
+                'name'     => "Order " . Auth::user()->name, // Auth::user()->name
+                'value' => $totalPrice,
+                'pm'       => "Plus",
             ] );
-        });
-        
+        } );
 
         session()->flash( 'success', "Your order has been places successfully" );
 

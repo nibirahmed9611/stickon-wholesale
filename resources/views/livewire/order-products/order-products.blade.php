@@ -19,9 +19,10 @@
                     @endif
 
                     
-                    <table class="table table-striped table-bordered table-hover">
+                    <table class="table table-striped table-bordered table-hover table-responsive-md">
                         <thead>
                             <tr>
+                                <th>Image</th>
                                 <th>Product</th>
                                 <th>Attribute</th>
                                 <th>Status</th>
@@ -33,6 +34,8 @@
                         <tbody>
                             @forelse ($orderProducts as $orderProduct)
                                 <tr>
+
+                                    <td>{!! $orderProduct->image ? "<a href=". asset( 'storage/' . $orderProduct->image->path ) ."> <img src=" . asset( 'storage/' . $orderProduct->image->path ) . " width='100px' /> </a>"   : "Not Found" !!}</td>
                                     <td>{{ $orderProduct->product ? $orderProduct->product->name : "Not Found" }}</td>
                                     <td>{{ $orderProduct->attribute ? $orderProduct->attribute->value : "Not Found" }}</td>
                                     <td>{{ $orderProduct->status ?? "Not Found" }}</td>
@@ -46,13 +49,33 @@
                     </table>
 
                     <div class="row">
-                        <div class="col"></div>
-                        <div class="col">
+                        <div class="col-md"></div>
+                        <div class="col-md">
+                            @if (session()->has('saved'))
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    {{ session('saved') }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            @endif
                             <h4 class="mt-4">Overview</h4>
                             <table class="table table-striped table-bordered table-hover">
                                 <tr>
                                     <td>Status</td>
-                                    <td>{{ $order['status'] }}</td>
+                                    @if ( auth()->user()->role == "Admin" )  
+                                        <td>
+                                            <select wire:model="status" class="form-control">
+                                                <option value="In Process">In Process</option>
+                                                <option value="In Delivery">In Delivery</option>
+                                                <option value="Delivered">Delivered</option>
+                                                <option value="Refunded">Refunded</option>
+                                                <option value="Pending Payment">Pending Payment</option>
+                                            </select>
+                                        </td>
+                                    @else
+                                        <td>{{ $status }}</td>
+                                    @endif
                                 </tr>
                                 <tr>
                                     <td>Subtotal</td>
@@ -60,7 +83,11 @@
                                 </tr>
                                 <tr>
                                     <td>Discount</td>
-                                    <td><input type="number" class="form-control" wire:model.defer="discount"></td>
+                                    @if ( auth()->user()->role == "Admin" )   
+                                        <td><input type="number" class="form-control" wire:model.defer="discount"></td>
+                                    @else
+                                    <td>{{ $discount }}</td>
+                                    @endif
                                 </tr>
                                 <tr>
                                     <td>Total</td>
@@ -68,7 +95,11 @@
                                 </tr>
                                 <tr>
                                     <td>Paid</td>
-                                    <td><input type="number" class="form-control" wire:model.defer="paid"></td>
+                                    @if ( auth()->user()->role == "Admin" )  
+                                        <td><input type="number" class="form-control" wire:model.defer="paid"></td>
+                                    @else
+                                        <td>{{ $paid }}</td>
+                                    @endif
                                 </tr>
                                 <tr>
                                     <td>Due</td>
@@ -82,7 +113,9 @@
                                     @error('paid') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="col text-right">
-                                    <button class="btn btn-success" wire:click="updateOrder">Save</button>
+                                    @if ( auth()->user()->role == "Admin" )  
+                                        <button class="btn btn-success" wire:click="updateOrder">Save</button>
+                                    @endif
                                 </div>
                             </div>
                             

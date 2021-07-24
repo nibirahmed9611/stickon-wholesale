@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller {
@@ -11,7 +12,7 @@ class ProductController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-       return view('products.all-products');
+        return view( 'products.all-products' );
     }
 
     /**
@@ -20,7 +21,7 @@ class ProductController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        return view('products.create-product');
+        return view( 'products.create-product' );
     }
 
     /**
@@ -40,7 +41,9 @@ class ProductController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show( $id ) {
-        //
+        return view( 'products.edit-attributes', [
+            'id' => $id,
+        ] );
     }
 
     /**
@@ -49,8 +52,12 @@ class ProductController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit( $id ) {
-        //
+    public function edit( Product $product ) {
+        // dd($product);
+
+        return view( 'products.edit-product', [
+            'product' => $product,
+        ] );
     }
 
     /**
@@ -60,8 +67,11 @@ class ProductController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update( Request $request, $id ) {
-        //
+    public function update( Request $request, Product $product ) {
+
+        $product->update( $request->all() );
+
+        return redirect()->back()->with( 'update', 'Product Updated Successfully' );
     }
 
     /**
@@ -70,7 +80,15 @@ class ProductController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy( $id ) {
-        //
+    public function destroy( Product $product ) {
+
+        foreach ( $product->attributes as $attribute ) {
+            $attribute->delete();
+        }
+
+        $product->delete();
+
+        return redirect()->route( 'product.index' )->with( 'delete', 'Deleted Successfully' );
     }
+
 }

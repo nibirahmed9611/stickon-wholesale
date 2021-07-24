@@ -40,7 +40,7 @@
                                         <div class="custom-file">
                                             <input type="file" wire:model.lazy="orderProducts.{{$index}}.photo" class="custom-file-input" id="customFile">
                                             <label class="custom-file-label" for="customFile">Upload design</label>
-                                          </div>
+                                        </div>
 
                                         <img src="{{ $orderProducts[$index]['photo'] != null ? $orderProducts[$index]['photo']->temporaryUrl(): 'https://via.placeholder.com/300x230'}}" width="300px" class="mt-2" style="border-radius: 5px;"> <br>
 

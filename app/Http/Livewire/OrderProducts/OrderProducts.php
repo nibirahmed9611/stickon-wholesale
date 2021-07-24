@@ -15,16 +15,19 @@ class OrderProducts extends Component {
 
     public $paid;
 
+    public $status;
+
     protected $rules = [
         'discount' => 'required|numeric|min:0',
         'paid'     => 'required|numeric|min:0',
+        'status'   => 'required',
     ];
-
 
     public function mount() {
         $this->order    = Order::findOrFail( $this->orderID )->toArray();
         $this->discount = $this->order['discount'];
         $this->paid     = $this->order['paid'];
+        $this->status     = $this->order['status'];
     }
 
     public function updateOrder() {
@@ -38,9 +41,12 @@ class OrderProducts extends Component {
             'total'    => $total,
             'paid'     => $this->paid,
             'due'      => $total - $this->paid,
+            'status'      => $this->status,
         ] );
 
         $this->mount();
+
+        session()->flash('saved','Saved Successfully');
     }
 
     public function paid() {

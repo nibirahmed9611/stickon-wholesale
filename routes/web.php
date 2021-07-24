@@ -2,8 +2,10 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\RefundController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ProductController;
 
@@ -24,12 +26,21 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::resource('product', ProductController::class);
-Route::resource('orders', OrderController::class);
+Route::middleware(['auth'])->group(function () {
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::resource('product', ProductController::class);
+    Route::resource('orders', OrderController::class);
 
-Route::get('order',[ OrderController::class,'makeOrder' ])->name('order');
+    Route::get('order',[ OrderController::class,'makeOrder' ])->name('order');
 
-Route::resource('account', AccountController::class);
-Route::resource('user', UserController::class);
+    Route::resource('account', AccountController::class);
+    Route::resource('user', UserController::class);
+    Route::resource('refund', RefundController::class);
+});
+
+
+
+Route::get('test', function(){
+    return view("test");
+});

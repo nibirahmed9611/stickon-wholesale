@@ -27,7 +27,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ url('/home') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -36,13 +36,22 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-                        <li class="navbar-item"><a href="{{ route('product.index') }}" class="navbar-link mx-3 text-dark">Products</a></li>
-                        <li class="navbar-item"><a href="{{ route('orders.index') }}" class="navbar-link mx-3 text-dark">Orders</a></li>
-                        <li class="navbar-item"><a href="{{ route('account.index') }}" class="navbar-link mx-3 text-dark">Accounts</a></li>
-                        <li class="navbar-item"><a href="{{ route('order') }}" class="navbar-link mx-3 text-dark">Order</a></li>
-                        <li class="navbar-item"><a href="{{ route('user.index') }}" class="navbar-link mx-3 text-dark">User</a></li>
-                    </ul>
+                    @if ( auth()->check() )
+                        <ul class="navbar-nav mr-auto">
+                            @if ( auth()->user()->role == "Admin" )
+                            <li class="navbar-item"><a href="{{ route('product.index') }}" class="navbar-link mx-3 text-dark">Products</a></li>
+                            <li class="navbar-item"><a href="{{ route('user.index') }}" class="navbar-link mx-3 text-dark">Users</a></li>
+                                <li class="navbar-item"><a href="{{ route('account.index') }}" class="navbar-link mx-3 text-dark">Accounts</a></li>
+                            @endif
+
+                            @if ( auth()->user()->role == "Customer" )
+                                <li class="navbar-item"><a href="{{ route('order') }}" class="navbar-link mx-3 text-dark">Order</a></li>
+                            @endif
+                            <li class="navbar-item"><a href="{{ route('orders.index') }}" class="navbar-link mx-3 text-dark">Orders</a></li>
+                            <li class="navbar-item"><a href="{{ route('refund.index') }}" class="navbar-link mx-3 text-dark">Refunds</a></li>
+                        </ul>
+                    @endif
+                    
                     
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -62,17 +71,17 @@
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
+                                    {{ Auth::user()->name ?? "" }}
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('home') }}">
+                                        {{ __('Home') }}
+                                    </a>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
-                                    </a>
-                                    <a class="dropdown-item" href="{{ route('logout') }}">
-                                        {{ __('Nibir Ahmed') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

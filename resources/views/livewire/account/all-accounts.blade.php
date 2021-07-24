@@ -11,18 +11,18 @@
             <div class="card">
                 <div class="card-header">
                     <div class="row">
-                        <div class="col-4 pt-4">
+                        <div class="col-md-4 pt-4">
                             <b class="h4">{{ __('All Accounts') }}</b>
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3">
                             <label>From</label>
                             <input wire:model.debounce.2000="from" type="date" class="form-control">
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-3">
                             <label>To</label>
                             <input wire:model.debounce.2000="to" type="date" class="form-control">
                         </div>
-                        <div class="col-2 pt-1 text-center">
+                        <div class="col-md-2 pt-1 text-center">
                             <button wire:click="resetFilter" class="btn btn-primary mt-4">Reset</button>
                         </div>
                     </div>
