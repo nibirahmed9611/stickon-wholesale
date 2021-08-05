@@ -12,9 +12,9 @@
 
                 <div class="card-body">
                     
-                    @if (session('status'))
+                    @if (session('updated'))
                         <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
+                            {{ session('updated') }}
                         </div>
                     @endif
 
@@ -25,9 +25,10 @@
                                 <th>Image</th>
                                 <th>Product</th>
                                 <th>Attribute</th>
-                                <th>Status</th>
                                 <th>Quantity</th>
                                 <th>Last Updated</th>
+                                <th>Status</th>
+                                <th>Update</th>
                             </tr>
                         </thead>
                         
@@ -35,12 +36,25 @@
                             @forelse ($orderProducts as $orderProduct)
                                 <tr>
 
-                                    <td>{!! $orderProduct->image ? "<a href=". asset( 'storage/' . $orderProduct->image->path ) ."> <img src=" . asset( 'storage/' . $orderProduct->image->path ) . " width='100px' /> </a>"   : "Not Found" !!}</td>
+                                    <td>{!! $orderProduct->image ? "<a target='_blank' href=". asset( 'storage/' . $orderProduct->image->path ) ."> <img src=" . asset( 'storage/' . $orderProduct->image->path ) . " width='100px' /> </a>"   : "Not Found" !!}</td>
                                     <td>{{ $orderProduct->product ? $orderProduct->product->name : "Not Found" }}</td>
                                     <td>{{ $orderProduct->attribute ? $orderProduct->attribute->value : "Not Found" }}</td>
-                                    <td>{{ $orderProduct->status ?? "Not Found" }}</td>
                                     <td>{{ $orderProduct->quantity ?? "Not Found" }}</td>
                                     <td>{{ $orderProduct->updated_at->format("d-M-Y | h:i a") }}</td>
+                                    <form action="{{ route("update.order.products",['order_product'=>$orderProduct->id]) }}" method="POST">
+                                        @csrf
+                                        @method("PATCH")
+                                        <td>
+                                            <select class="form-control" name="status">
+                                                <option @if( $orderProduct->status == "Processing" ) selected @endif value="Processing">Processing</option>
+                                                <option @if( $orderProduct->status == "Completed" ) selected @endif value="Completed">Completed</option>
+                                                <option @if( $orderProduct->status == "Declined" ) selected @endif value="Declined">Declined</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="submit" class="btn btn-primary" value="Update">
+                                        </td>
+                                    </form>
                                 </tr>
                             @empty
                                 {{ __('No Orders Products Found') }}

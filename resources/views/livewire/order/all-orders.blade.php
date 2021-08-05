@@ -8,7 +8,7 @@
                 </div>
             @endif
             <div class="card">
-                <div class="card-header"><b>{{ __('All Products') }}</b></div>
+                <div class="card-header"><b>{{ __('All Orders') }}</b></div>
 
                 <div class="card-body">
                     
@@ -22,7 +22,7 @@
                     <table class="table table-striped table-bordered table-hover table-responsive-md">
                         <thead>
                             <tr>
-                                <th>User</th>
+                                <th>Done By</th>
                                 <th>Subtotal</th>
                                 <th>Discount</th>
                                 <th>Total</th>
@@ -38,13 +38,13 @@
                         <tbody>
                             @forelse ($allOrders as $order)
                                 <tr>
-                                    <td>{{ "Nibir" }}</td>
-                                    <td>{{ $order->subtotal }}</td>
-                                    <td>{{ $order->discount }}</td>
-                                    <td>{{ $order->total }}</td>
-                                    <td>{{ $order->paid }}</td>
-                                    <td>{{ $order->due }}</td>
-                                    <td>{{ $order->status }}</td>
+                                    <td>{!! $order->user ? "<a href=". route("user.edit",['user'=> $order->user->id]) . ">" . $order->user->name . "</a>"  : 'Not found' !!}</td>
+                                    <td>{{ $order->subtotal ?? '' }}</td>
+                                    <td>{{ $order->discount  ?? '' }}</td>
+                                    <td>{{ $order->total ?? '' }}</td>
+                                    <td>{{ $order->paid ?? '' }}</td>
+                                    <td>{{ $order->due ?? '' }}</td>
+                                    <td>{{ $order->status ?? '' }}</td>
                                     <td>{{ $order->created_at->format("d-M-Y | h:i a") }}</td>
                                     <td><a class="btn btn-primary" href="{{ route('orders.show',['order'=>$order->id]) }}">Show</a></td>
                                     <td><button class="btn btn-danger" wire:click="delete({{ $order->id }})" data-toggle="modal" data-target="#exampleModal">Delete</button></td>

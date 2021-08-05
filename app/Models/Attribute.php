@@ -13,6 +13,7 @@ class Attribute extends Model {
     protected $fillable = [
         'product_id',
         'value',
+        'quantity',
     ];
 
     /**

@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class CreateAccount extends Component {
 
-    public Account $account;
+    public $account;
 
     protected $rules = [
         'account.name'  => 'required|string',

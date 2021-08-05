@@ -25,17 +25,25 @@
                         <input wire:model.defer="product.price" type="number" class="form-control">
                         @error('product.price') <span class="text-danger">{{ $message }}</span><br> @enderror
 
-                        <label class="mt-1" for="">Stock</label>   
+                        {{-- <label class="mt-1" for="">Stock</label>   
                         <input wire:model.defer="product.quantity" type="number" class="form-control">
-                        @error('product.quantity') <span class="text-danger">{{ $message }}</span><br> @enderror
+                        @error('product.quantity') <span class="text-danger">{{ $message }}</span><br> @enderror --}}
 
                         @if ( count($attributes) > 0 )
                             <label class="mt-2" for="">Attributes</label>   
                         @endif
 
                         @foreach ($attributes as $i => $attribute)
-                            <input type="text" class="form-control mt-1" wire:model.defer="attributes.{{$i}}">
+                        <div class="row">
+                            <div class="col">
+                                <input type="text" class="form-control mt-1" wire:model.defer="attributes.{{$i}}.value" placeholder="Name">
+                            </div>
+                            <div class="col">
+                                <input type="number" class="form-control mt-1" wire:model.defer="attributes.{{$i}}.quantity" placeholder="Quantity">
+                            </div>
+                        </div>
                         @endforeach
+                        @error('attributes') <span class="text-danger">{{ $message }}</span><br> @enderror
 
                         <div class="row">
                             <div class="col">

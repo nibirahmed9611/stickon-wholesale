@@ -40,9 +40,9 @@
                             <div class="col-sm-4">
                                 <div class="card border-danger">
                                     <div class="card-body">
-                                    <h5 class="card-title">Refund</h5>
-                                    <p class="card-text">Apply for a refund</p>
-                                    <a href="{{ route('refund.create') }}" class="btn btn-danger">Apply Refund</a>
+                                    <h5 class="card-title">Replacement</h5>
+                                    <p class="card-text">Apply for a Replacement</p>
+                                    <a href="{{ route('refund.create') }}" class="btn btn-danger">Apply for replacement</a>
                                     </div>
                                 </div>
                             </div>
@@ -84,9 +84,9 @@
                             <div class="col-sm-4 mt-3">
                                 <div class="card border-danger">
                                     <div class="card-body">
-                                    <h5 class="card-title">Refunds</h5>
-                                    <p class="card-text">List of all the refunds</p>
-                                    <a href="{{ route('refund.index') }}" class="btn btn-danger">Refunds</a>
+                                    <h5 class="card-title">Replacement</h5>
+                                    <p class="card-text">List of all the replacemnet requests</p>
+                                    <a href="{{ route('refund.index') }}" class="btn btn-danger">Replacements</a>
                                     </div>
                                 </div>
                             </div>

@@ -12,7 +12,7 @@
                 </div>
             @endif
             <div class="card">
-                <div class="card-header">{{ __('Add Refund') }}</div>
+                <div class="card-header">{{ __('Create replacement request') }}</div>
 
                 <div class="card-body">
                     @if (session('status'))

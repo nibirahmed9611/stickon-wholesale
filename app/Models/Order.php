@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use App\Models\Account;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Order extends Model {
 
@@ -38,6 +39,15 @@ class Order extends Model {
      */
     public function account(): HasOne {
         return $this->hasOne( Account::class );
+    }
+
+    /**
+     * Get the user that owns the Order
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): BelongsTo {
+        return $this->belongsTo( User::class );
     }
 
 }

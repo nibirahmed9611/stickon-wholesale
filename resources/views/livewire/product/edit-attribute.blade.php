@@ -18,7 +18,7 @@
                 </div>
             @endif
             <div class="card">
-                <div class="card-header">{{ __('Create Product') }}</div>
+                <div class="card-header">{{ __('Edit Attribute') }}</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -33,18 +33,26 @@
                             
                         
                         @foreach ($attributes as $i => $attribute)
+                            <tr>
+                                <td>
+                                    <input type="text" placeholder="Name" class="form-control mt-1" wire:model.defer="attributes.{{$i}}.value">
+                                </td>
+                                <td>
+                                    <input type="number" placeholder="Quantity" class="form-control mt-1" wire:model.defer="attributes.{{$i}}.quantity">
+                                </td>
 
-                        <tr>
-                            <td class="w-100">
-                                <input type="text" class="form-control mt-1" wire:model.defer="attributes.{{$i}}">
-                            </td>
-                            <td class="text-center">
-                                <button wire:click.prevent="edit({{ $i }})" class="btn btn-primary">Update</button>
-                            </td>
-                            <td class="text-center">
-                                <button wire:click.prevent="delete({{ $i }})" class="btn btn-danger">Delete</button>
-                            </td>
-                        </tr>
+                                @if ( isset($attribute['id']) )
+                                    <td class="text-center">
+                                        <button wire:click.prevent="edit({{ $i }})" class="btn btn-primary">Update</button>
+                                    </td>
+                                    <td class="text-center">
+                                        <button wire:click.prevent="delete({{ $attribute['id'] }})" class="btn btn-danger">Delete</button>
+                                    </td>
+                                @else
+                                    <td colspan="2">Not Updated Yet</td>
+                                @endif
+                                
+                            </tr>
                         @endforeach
 
                         </table>    
@@ -61,6 +69,7 @@
                     </form>
                 </div>
             </div>
+            <a href="{{ route('product.edit',['product'=>$productID]) }}" class="btn btn-info mt-2">Back</a>
         </div>
     </div>
 </div>

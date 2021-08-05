@@ -20,7 +20,7 @@
                 <a href="{{ route("refund.create") }}" class="btn btn-primary mb-2">Apply for Refund</a>
             @endif
             <div class="card">
-                <div class="card-header"><b>{{ __('All Users') }}</b></div>
+                <div class="card-header"><b>{{ __('All replacement requests') }}</b></div>
 
                 <div class="card-body">
                     
@@ -48,7 +48,7 @@
                                 <tr>
                                     <td>{{ $refund->title ?? "" }}</td>
                                     <td>{{ $refund->description ? substr($refund->description, 0, 30) : "" }}</td>
-                                    <td>{!! $refund->image ? "<a href=". asset( 'storage/' . $refund->image ) ."><img width='100px' src=". asset( 'storage/' . $refund->image ) ."></a>" : "Not Found" !!}</td>
+                                    <td>{!! $refund->image ? "<a target='_blank' href=". asset( 'storage/' . $refund->image ) ."><img width='100px' src=". asset( 'storage/' . $refund->image ) ."></a>" : "Not Found" !!}</td>
                                     <td>{{ $refund->created_at ? $refund->created_at->format("d-M-Y") : "Not Found" }}</td>
                                     <td><a class="btn btn-primary" href="{{ route("refund.show",['refund'=>$refund->id]) }}">Show</a></td>
                                     <td>
@@ -61,7 +61,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6">{{ __('No Refund Found') }}</td>
+                                    <td colspan="6">{{ __('No Replacement Found') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>

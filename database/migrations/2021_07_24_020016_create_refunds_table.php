@@ -17,6 +17,7 @@ class CreateRefundsTable extends Migration {
             $table->string("title");
             $table->longText("description");
             $table->string("image")->nullable();
+            $table->string("status")->default("Processing");
             $table->timestamps();
         } );
     }

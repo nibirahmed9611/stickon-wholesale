@@ -59,19 +59,6 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row">
-                                <label for="quantity" class="col-md-4 col-form-label text-md-right">{{ __('quantity') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="quantity" value="{{ $product->quantity }}" type="number" class="form-control @error('quantity') is-invalid @enderror" name="quantity" value="{{ old('quantity') }}" required autocomplete="quantity" autofocus>
-
-                                    @error('quantity')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>                            
 
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 text-right">
@@ -84,6 +71,23 @@
                                 </div>
                             </div>
                         </form>
+
+                        <h4 class="mt-5">Product Attributes</h4>
+                        <table class="table table-striped table-bordered table-hover">
+                            <tr>
+                                <th>Name</th>
+                                <th>Quantity</th>
+                            </tr>
+                            @foreach ($product->attributes as $attributes)
+                            <tr>
+                                <td>{{ $attributes->value }}</td>
+                                <td>{{ $attributes->quantity }}</td>
+                            </tr>    
+                            @endforeach
+                            
+
+                        </table>
+
                     </div>
                 </div>
             </div>

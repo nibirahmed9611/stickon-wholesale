@@ -16,6 +16,7 @@ class CreateAttributesTable extends Migration {
 
             $table->foreignId( 'product_id' )->unsigned()->index();
             $table->string( 'value' );
+            $table->integer( 'quantity' )->default(0);
 
             $table->timestamps();
         } );

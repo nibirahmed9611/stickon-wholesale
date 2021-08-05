@@ -53,7 +53,6 @@ class ProductController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function edit( Product $product ) {
-        // dd($product);
 
         return view( 'products.edit-product', [
             'product' => $product,

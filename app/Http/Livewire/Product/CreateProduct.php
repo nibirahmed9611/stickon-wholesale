@@ -8,7 +8,7 @@ use Livewire\Component;
 
 class CreateProduct extends Component {
 
-    public Product $product;
+    public $product;
 
     public $attributes = [];
 
@@ -17,26 +17,32 @@ class CreateProduct extends Component {
     }
 
     protected $rules = [
-        'product.name'     => 'required|string',
-        'product.price'    => 'required|integer',
-        'product.quantity' => 'required|integer|numeric|min:0',
+        'product.name'  => 'required|string',
+        'product.price' => 'required|integer',
+        // 'product.quantity' => 'required|integer|numeric|min:0',
+        'attributes'    => 'required',
     ];
 
     public function addMore() {
-        $this->attributes[] = "";
+        $this->attributes[] = [
+            'value'    => "",
+            'quantity' => "",
+        ];
     }
 
     public function save() {
         $this->validate();
 
+        // dd($this->attributes);
         $this->product->save();
 
         $product = $this->product->id;
 
         foreach ( $this->attributes as $attribute ) {
             Attribute::create( [
-                'value'      => $attribute,
+                'value'      => $attribute['value'],
                 'product_id' => $product,
+                'quantity'   => $attribute['quantity'],
             ] );
         }
 

@@ -18,7 +18,7 @@
             </div>
         @endif
             <div class="card">
-                <div class="card-header">{{ __('Add Refund') }}</div>
+                <div class="card-header">{{ __('Create replacement request') }}</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -77,7 +77,7 @@
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
-                                    {{ __('Apply Refund') }}
+                                    {{ __('Apply for replacement') }}
                                 </button>
                             </div>
                         </div>

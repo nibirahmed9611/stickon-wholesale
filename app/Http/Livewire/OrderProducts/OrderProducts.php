@@ -17,6 +17,10 @@ class OrderProducts extends Component {
 
     public $status;
 
+    public $orderProducts;
+
+    public $statuses;
+
     protected $rules = [
         'discount' => 'required|numeric|min:0',
         'paid'     => 'required|numeric|min:0',
@@ -25,6 +29,7 @@ class OrderProducts extends Component {
 
     public function mount() {
         $this->order    = Order::findOrFail( $this->orderID )->toArray();
+        $this->orderProducts = Order::findOrFail( $this->orderID )->order_products;
         $this->discount = $this->order['discount'];
         $this->paid     = $this->order['paid'];
         $this->status     = $this->order['status'];
@@ -50,13 +55,12 @@ class OrderProducts extends Component {
     }
 
     public function paid() {
-        dd( $this->paid );
+        // dd( $this->paid );
     }
 
     public function render() {
-        return view( 'livewire.order-products.order-products', [
-            'orderProducts' => Order::findOrFail( $this->orderID )->order_products,
-        ] );
+        // dd($this->orderProducts);
+        return view( 'livewire.order-products.order-products');
     }
 
 }

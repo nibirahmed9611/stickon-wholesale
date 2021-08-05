@@ -13,22 +13,30 @@ class EditAttribute extends Component {
     public $attributes = [];
 
     public function mount() {
-        $this->attributes = Product::findOrFail( $this->productID )->attributes->pluck( 'value','id','created_at' )->toArray();
+        $this->attributes = Product::findOrFail( $this->productID )->attributes()->select('id','value','quantity')->get()->toArray();
     }
 
     public function addMore() {
-        $this->attributes[] = "";
+        $this->attributes[] = [
+            'value'    => "",
+            'quantity' => "",
+        ];
     }
 
     public function edit($id) {
-        Attribute::findOrFail($id)->update([
-            'value' => $this->attributes[$id]
+
+        $primaryKey = $this->attributes[$id]['id'];
+        
+        Attribute::findOrFail($primaryKey)->update([
+            'value' => $this->attributes[$id]['value'],
+            'quantity' => $this->attributes[$id]['quantity'],
         ]);
 
         session()->flash('updated','Updated Successfully');
     }
 
     public function delete($id) {
+        // dd($id);
         Attribute::findOrFail($id)->delete();
         $this->mount();
 
@@ -36,15 +44,22 @@ class EditAttribute extends Component {
     }
 
     public function update() {
-
+        // dd($this->attributes);
         foreach ( $this->attributes as $attribute ) {
+
             Attribute::firstOrCreate(
-                ['value' => $attribute],
-                ['product_id' => $this->productID],
+                [
+                    'value' => $attribute['value'],
+                    'quantity' => (int) $attribute['quantity'],
+                    'product_id' => $this->productID,
+                ],
             );
+            
         }
 
         session()->flash('updated','Updated Successfully');
+
+        $this->mount();
 
     }
 

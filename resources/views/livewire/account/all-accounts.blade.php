@@ -1,30 +1,38 @@
 
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
             @if (session()->has('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
                 </div>
             @endif
-            <a href="{{ route("account.create") }}" class="btn btn-primary mb-2">Add Account Data</a>
+            <div class="row">
+                <div class="col">
+                    <a href="{{ route("account.create") }}" class="btn btn-primary mb-2">Add Account Data</a>
+                </div>
+                <div class="col text-right">
+                    <button wire:click="resetFilter" class="btn btn-info text-light mb-2">Reset</button>
+                </div>
+            </div>
+
             <div class="card">
                 <div class="card-header">
                     <div class="row">
                         <div class="col-md-4 pt-4">
                             <b class="h4">{{ __('All Accounts') }}</b>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label>From</label>
                             <input wire:model.debounce.2000="from" type="date" class="form-control">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label>To</label>
                             <input wire:model.debounce.2000="to" type="date" class="form-control">
                         </div>
-                        <div class="col-md-2 pt-1 text-center">
+                        {{-- <div class="col-md-2 pt-1 text-center">
                             <button wire:click="resetFilter" class="btn btn-primary mt-4">Reset</button>
-                        </div>
+                        </div> --}}
                     </div>
                     
                 </div>

@@ -1,7 +1,7 @@
 
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
             @if (session()->has('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
@@ -31,7 +31,6 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Price</th>
-                                <th>Remaining Stock</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
                             </tr>
@@ -42,7 +41,6 @@
                                 <tr>
                                     <td>{{ $product->name }}</td>
                                     <td>{{ $product->price }}</td>
-                                    <td>{{ $product->quantity }}</td>
                                     <td><a class="btn btn-primary" href="{{ route('product.edit',['product'=>$product->id]) }}">Edit</a></td>
                                     <td>
                                         <form action="{{ route('product.destroy',['product'=>$product->id]) }}" method="POST">

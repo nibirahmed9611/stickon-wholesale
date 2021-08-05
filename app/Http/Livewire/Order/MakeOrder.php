@@ -8,6 +8,7 @@ use App\Models\Account;
 use App\Models\Product;
 use Livewire\Component;
 use App\Models\OrderProduct;
+use App\Models\Attribute;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -65,7 +66,10 @@ class MakeOrder extends Component {
      */
     public function order() {
 
-// dd($this->orderProducts);
+        
+        
+        
+        dd("Ashche");
 
         // Check the stock
         $productAndQuantity = array();
@@ -122,7 +126,7 @@ class MakeOrder extends Component {
                 'status'   => "Pending Payment",
             ] );
 
-// Assign all the products to the order and transfer the images
+            // Assign all the products to the order and transfer the images
 
             foreach ( $this->orderProducts as $orderedProduct ) {
 
@@ -145,19 +149,19 @@ class MakeOrder extends Component {
             }
 
             // Remove from stock
+
             foreach ( $productAndQuantity as $key => $orderQuantity ) {
                 $product = Product::find( $key );
 
                 if ( $orderQuantity < $product->quantity ) {
                     $product->decrement( 'quantity', $orderQuantity );
                 }
-
             }
 
             // Create a new account(p/m)
             Account::create( [
                 'order_id' => $order->id,
-                'name'     => "Order " . Auth::user()->name, // Auth::user()->name
+                'name'     => "Order from " . Auth::user()->name, // Auth::user()->name
                 'value' => $totalPrice,
                 'pm'       => "Plus",
             ] );
