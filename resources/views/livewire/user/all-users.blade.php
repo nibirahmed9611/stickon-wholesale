@@ -12,7 +12,10 @@
                     {{ session('delete') }}
                 </div>
             @endif
-            <a href="{{ route("user.create") }}" class="btn btn-primary mb-2">Add User</a>
+
+            @if ( auth()->user()->role == "Admin" )
+                <a href="{{ route("user.create") }}" class="btn btn-primary mb-2">Add User</a>
+            @endif
             <div class="card">
                 <div class="card-header"><b>{{ __('All Users') }}</b></div>
 
@@ -36,6 +39,7 @@
                                 <th>Joined</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
+                                <th>Orders</th>
                             </tr>
                         </thead>
                         
@@ -48,14 +52,25 @@
                                     <td>{{ $user->address ?? "" }}</td>
                                     <td>{{ $user->role ?? "" }}</td>
                                     <td>{{ $user->created_at ? $user->created_at->format("d-M-Y") : "Not Found" }}</td>
-                                    <td><a class="btn btn-primary" href="{{ route("user.edit",['user'=>$user->id]) }}">Edit</a></td>
                                     <td>
-                                        <form action="{{ route("user.destroy",['user'=>$user->id]) }}" method="POST">
-                                            @csrf
-                                            @method("DELETE")
-                                            <input onclick="return confirm('Are you sure you want to delete?')" class="btn btn-danger" type="submit" value="Delete">
-                                        </form>
+                                        @if ( auth()->user()->role == "Admin" )
+                                            <form action="{{ route("user.destroy",['user'=>$user->id]) }}" method="POST">
+                                                @csrf
+                                                @method("DELETE")
+                                                <input onclick="return confirm('Are you sure you want to delete?')" class="btn btn-danger" type="submit" value="Delete">
+                                            </form>
+                                        @else
+                                            <p>Only for admin</p>
+                                        @endif
                                     </td>
+                                    <td>
+                                        @if ( auth()->user()->role == "Admin" )
+                                            <a class="btn btn-primary" href="{{ route("user.edit",['user'=>$user->id]) }}">Edit</a>
+                                        @else
+                                            <p>Only for admin</p>
+                                        @endif
+                                    </td>
+                                    <td><a class="btn btn-primary" href="{{ route("user.order",['user'=>$user->id]) }}">Orders</a></td>
                                 </tr>
                             @empty
                                 <tr>

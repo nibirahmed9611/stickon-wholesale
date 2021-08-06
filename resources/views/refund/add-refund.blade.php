@@ -18,7 +18,7 @@
             </div>
         @endif
             <div class="card">
-                <div class="card-header">{{ __('Create replacement request') }}</div>
+                <div class="card-header">{{ __('Replacement') }}</div>
 
                 <div class="card-body">
                     @if (session('status'))

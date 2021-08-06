@@ -55,7 +55,7 @@
                                         </select>
 
                                         <label class="mt-5">Model/Size</label>                                            
-                                        <select class="form-control" wire:model="orderProducts.{{$index}}.attribute">
+                                        <select class="form-control" wire:model.lazy="orderProducts.{{$index}}.attribute">
                                             <option value="null">Select Model/Size</option>
                                             @php
                                                 if( $orderProducts[$index]['product'] != "" ){

@@ -12,7 +12,7 @@
                 </div>
             @endif
             <div class="card">
-                <div class="card-header">{{ __('Add User') }}</div>
+                <div class="card-header">{{ __('Update User') }}</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -126,7 +126,7 @@
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
-                                    {{ __('Register') }}
+                                    {{ __('Update') }}
                                 </button>
                             </div>
                         </div>

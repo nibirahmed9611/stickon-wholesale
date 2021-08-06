@@ -15,7 +15,7 @@ class RefundController extends Controller {
      */
     public function index() {
 
-        if(Auth::user()->role == "Admin"){
+        if( Auth::user()->role == "Admin" || Auth::user()->role == "Viewer" ){
             $refunds = Refund::orderByDesc( 'id' )->paginate( 15 );
         }else{
             $refunds = Auth::user()->refund()->paginate( 15 );
@@ -89,7 +89,12 @@ class RefundController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update( Request $request, Refund $refund ) {
-        dd( $refund );
+
+        $refund->update([
+            'status' => $request->status
+        ]);
+
+        return redirect()->back()->with( 'update', 'Updated Successfully' );
     }
 
     /**

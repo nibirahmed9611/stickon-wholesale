@@ -12,6 +12,7 @@ class Refund extends Model {
         'description',
         'image',
         'user_id',
+        'status',
     ];
 
     use HasFactory;

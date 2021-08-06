@@ -2,16 +2,16 @@
 
 namespace App\Http\Livewire\Order;
 
+use App\Models\Account;
+use App\Models\Attribute;
 use App\Models\Media;
 use App\Models\Order;
-use App\Models\Account;
-use App\Models\Product;
-use Livewire\Component;
 use App\Models\OrderProduct;
-use App\Models\Attribute;
-use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\DB;
+use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class MakeOrder extends Component {
 
@@ -57,6 +57,20 @@ class MakeOrder extends Component {
 
     }
 
+    public function updatedOrderProducts() {
+
+        foreach ($this->orderProducts as $key => $orderedProduct) {
+            $product = Product::findOrFail($orderedProduct['product']);
+
+            $attributes = $product->attributes()->pluck('id')->toArray();
+
+            if( !in_array($orderedProduct['attribute'],$attributes) ){
+                $this->orderProducts[$key]['attribute'] = "null";
+            }
+        }
+        
+    }
+
     /**
      *
      * Placing an order
@@ -66,45 +80,26 @@ class MakeOrder extends Component {
      */
     public function order() {
 
-        
-        
-        
-        dd("Ashche");
-
-        // Check the stock
-        $productAndQuantity = array();
-
-        foreach ( $this->orderProducts as $orderProduct ) {
-
-            if ( array_key_exists( $orderProduct['product'], $productAndQuantity ) ) {
-                $productAndQuantity[$orderProduct['product']] += (int) $orderProduct['quantity'];
-            } else {
-                $productAndQuantity[$orderProduct['product']] = (int) $orderProduct['quantity'];
-            }
-
-        }
-
-        // Showing error message of the stock and showing the error message
-
-        $totalPrice = 0;
+        // Showing error message of the stock and showing the error message of all attributes checked
 
         $this->productErrors = [];
 
         foreach ( $this->orderProducts as $orderProduct ) {
 
-            if ( $orderProduct['attribute'] == null || $orderProduct['attribute'] == "null" ) {
+            if ( $orderProduct['attribute'] == null || $orderProduct['attribute'] == "null" || $orderProduct['attribute'] == "" ) {
                 $this->productErrors[] = "Please choose size/model for all products";
                 return;
             }
 
         }
 
-        foreach ( $productAndQuantity as $key => $orderQuantity ) {
-            $product = Product::find( $key );
-            $totalPrice += (int) $product->price * $orderQuantity;
+        // Check the stock
 
-            if ( $orderQuantity > $product->quantity ) {
-                $this->productErrors[] = $product->name . " has " . $product->quantity . " in stock, you've ordered " . $orderQuantity . " items ";
+        foreach ( $this->orderProducts as $orderProduct ) {
+            $attribute = Attribute::findOrFail( $orderProduct['attribute'] );
+
+            if ( $orderProduct['quantity'] > $attribute->quantity ) {
+                $this->productErrors[] = $attribute->value . " of " . $attribute->product->name . " has " . $attribute->quantity . " in stock, you've ordered " . $orderProduct['quantity'] . " items ";
             }
 
         }
@@ -113,7 +108,20 @@ class MakeOrder extends Component {
             return;
         }
 
-        DB::transaction( function () use ( $totalPrice, $productAndQuantity ) {
+        //Calculate the price
+
+        $totalPrice = 0;
+
+        foreach ( $this->orderProducts as $orderedProducts ) {
+
+            $product = Product::findOrFail( $orderedProducts['product'] );
+
+            $totalPrice += (int) $product->price * $orderedProducts['quantity'];
+
+        }
+
+
+        DB::transaction( function () use ( $totalPrice ) {
 
             // Make an order
             $order = Order::create( [
@@ -135,7 +143,7 @@ class MakeOrder extends Component {
                     'product_id'   => $orderedProduct['product'],
                     'attribute_id' => $orderedProduct['attribute'],
                     'quantity'     => $orderedProduct['quantity'],
-                    'staus'        => "Incomplete",
+                    'staus'        => "Processing",
                 ] );
 
                 if ( $orderedProduct['photo'] ) {
@@ -146,16 +154,20 @@ class MakeOrder extends Component {
                         'path'             => $uploadedPhoto,
                     ] );
                 }
+
             }
 
             // Remove from stock
 
-            foreach ( $productAndQuantity as $key => $orderQuantity ) {
-                $product = Product::find( $key );
+            foreach ( $this->orderProducts as $p ) {
 
-                if ( $orderQuantity < $product->quantity ) {
-                    $product->decrement( 'quantity', $orderQuantity );
+                // dd("Ashche");
+                $attribute = Attribute::findOrFail( $p['attribute'] );
+
+                if ( $p['quantity'] < $attribute->quantity ) {
+                    $attribute->decrement( 'quantity', $p['quantity'] );
                 }
+
             }
 
             // Create a new account(p/m)

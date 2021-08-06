@@ -38,7 +38,7 @@
                     <!-- Left Side Of Navbar -->
                     @if ( auth()->check() )
                         <ul class="navbar-nav mr-auto">
-                            @if ( auth()->user()->role == "Admin" )
+                            @if ( auth()->user()->role == "Admin" || auth()->user()->role == "Viewer" )
                             <li class="navbar-item"><a href="{{ route('product.index') }}" class="navbar-link mx-3 text-dark">Products</a></li>
                             <li class="navbar-item"><a href="{{ route('user.index') }}" class="navbar-link mx-3 text-dark">Users</a></li>
                                 <li class="navbar-item"><a href="{{ route('account.index') }}" class="navbar-link mx-3 text-dark">Accounts</a></li>

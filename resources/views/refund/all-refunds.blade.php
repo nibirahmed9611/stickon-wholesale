@@ -37,6 +37,7 @@
                                 <th>Name</th>
                                 <th>Description</th>
                                 <th>Image</th>
+                                <th>Status</th>
                                 <th>Applied at</th>
                                 <th>Action</th>
                                 <th>Delete</th>
@@ -49,14 +50,19 @@
                                     <td>{{ $refund->title ?? "" }}</td>
                                     <td>{{ $refund->description ? substr($refund->description, 0, 30) : "" }}</td>
                                     <td>{!! $refund->image ? "<a target='_blank' href=". asset( 'storage/' . $refund->image ) ."><img width='100px' src=". asset( 'storage/' . $refund->image ) ."></a>" : "Not Found" !!}</td>
+                                    <td>{{ $refund->status ?? "" }}</td>
                                     <td>{{ $refund->created_at ? $refund->created_at->format("d-M-Y") : "Not Found" }}</td>
                                     <td><a class="btn btn-primary" href="{{ route("refund.show",['refund'=>$refund->id]) }}">Show</a></td>
                                     <td>
-                                        <form action="{{ route("refund.destroy",['refund'=>$refund->id]) }}" method="POST">
-                                            @csrf
-                                            @method("DELETE")
-                                            <input onclick="return confirm('Are you sure you want to delete?')" class="btn btn-danger" type="submit" value="Delete">
-                                        </form>
+                                        @if ( auth()->user()->role == "Admin" )
+                                            <form action="{{ route("refund.destroy",['refund'=>$refund->id]) }}" method="POST">
+                                                @csrf
+                                                @method("DELETE")
+                                                <input onclick="return confirm('Are you sure you want to delete?')" class="btn btn-danger" type="submit" value="Delete">
+                                            </form>
+                                        @else
+                                            <p>Only for admin</p>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty

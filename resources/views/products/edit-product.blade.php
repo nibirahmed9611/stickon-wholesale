@@ -62,9 +62,12 @@
 
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 text-right">
-                                    <button type="submit" class="btn btn-primary">
-                                        {{ __('Update') }}
-                                    </button>
+                                    @if ( auth()->user()->role == "Admin" )
+                                        <button type="submit" class="btn btn-primary">
+                                            {{ __('Update') }}
+                                        </button>
+                                    @endif
+                                    
                                 </div>
                                 <div class="col-md-4 text-right">
                                     <a href="{{ route("product.show",['product'=>$product->id]) }}" class="btn btn-primary">Edit Attribute</a>

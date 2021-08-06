@@ -45,14 +45,18 @@
                                         @csrf
                                         @method("PATCH")
                                         <td>
-                                            <select class="form-control" name="status">
+                                            <select @if ( auth()->user()->role == "Viewer" ) disabled @endif class="form-control" name="status">
                                                 <option @if( $orderProduct->status == "Processing" ) selected @endif value="Processing">Processing</option>
                                                 <option @if( $orderProduct->status == "Completed" ) selected @endif value="Completed">Completed</option>
                                                 <option @if( $orderProduct->status == "Declined" ) selected @endif value="Declined">Declined</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="submit" class="btn btn-primary" value="Update">
+                                            @if ( auth()->user()->role == "Admin" )
+                                                <input type="submit" class="btn btn-primary" value="Update">
+                                            @else
+                                                <p>Only for admin</p>
+                                            @endif
                                         </td>
                                     </form>
                                 </tr>

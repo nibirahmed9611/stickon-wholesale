@@ -9,7 +9,9 @@
             @endif
             <div class="row">
                 <div class="col">
-                    <a href="{{ route("account.create") }}" class="btn btn-primary mb-2">Add Account Data</a>
+                    @if ( auth()->user()->role == "Admin" )
+                        <a href="{{ route("account.create") }}" class="btn btn-primary mb-2">Add Account Data</a>
+                    @endif
                 </div>
                 <div class="col text-right">
                     <button wire:click="resetFilter" class="btn btn-info text-light mb-2">Reset</button>

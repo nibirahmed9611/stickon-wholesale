@@ -13,7 +13,11 @@
                     {{ session('delete') }}
                 </div>
             @endif
-            <a href="{{ route("product.create") }}" class="btn btn-primary mb-2">Add Product</a>
+
+            @if ( auth()->user()->role == "Admin" )    
+                <a href="{{ route("product.create") }}" class="btn btn-primary mb-2">Add Product</a>
+            @endif
+
             <div class="card">
                 <div class="card-header"><b>{{ __('All Products') }}</b></div>
 
@@ -41,14 +45,20 @@
                                 <tr>
                                     <td>{{ $product->name }}</td>
                                     <td>{{ $product->price }}</td>
-                                    <td><a class="btn btn-primary" href="{{ route('product.edit',['product'=>$product->id]) }}">Edit</a></td>
                                     <td>
-                                        <form action="{{ route('product.destroy',['product'=>$product->id]) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
+                                        <a class="btn btn-primary" href="{{ route('product.edit',['product'=>$product->id]) }}">Edit</a>
+                                    </td>
+                                    <td>
+                                        @if ( auth()->user()->role == "Admin" )
+                                            <form action="{{ route('product.destroy',['product'=>$product->id]) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
 
-                                            <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete?')">
-                                        </form>
+                                                <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete?')">
+                                            </form>
+                                        @else
+                                            Only for admin
+                                        @endif
                                     </td>
                                 </tr>
                             @empty

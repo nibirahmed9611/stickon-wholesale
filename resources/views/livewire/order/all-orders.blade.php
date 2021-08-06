@@ -47,7 +47,13 @@
                                     <td>{{ $order->status ?? '' }}</td>
                                     <td>{{ $order->created_at->format("d-M-Y | h:i a") }}</td>
                                     <td><a class="btn btn-primary" href="{{ route('orders.show',['order'=>$order->id]) }}">Show</a></td>
-                                    <td><button class="btn btn-danger" wire:click="delete({{ $order->id }})" data-toggle="modal" data-target="#exampleModal">Delete</button></td>
+                                    <td>
+                                        @if ( auth()->user()->role == "Admin" )
+                                            <button class="btn btn-danger" wire:click="delete({{ $order->id }})" data-toggle="modal" data-target="#exampleModal">Delete</button>
+                                        @else
+                                            <p>Only for admin</p>
+                                        @endif
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>

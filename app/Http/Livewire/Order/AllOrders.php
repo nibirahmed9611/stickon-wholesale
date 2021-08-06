@@ -40,7 +40,7 @@ class AllOrders extends Component {
     }
 
     public function render() {
-        if( Auth::user()->role == "Admin" ){
+        if( Auth::user()->role == "Admin" || Auth::user()->role == "Viewer"  ){
             $allOrders = Order::orderByDesc( 'id' )->paginate( 15 );
         }else{
             $allOrders = Auth::user()->order()->orderByDesc( 'id' )->paginate( 15 );

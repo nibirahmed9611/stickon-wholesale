@@ -49,7 +49,7 @@ class UserController extends Controller {
             'password' => Hash::make( $data['password'] ),
             'phone'    => $data['phone'],
             'address'  => $data['address'],
-            'role'     => $data['address'],
+            'role'     => $data['role'],
         ] );
 
         return redirect()->route( "user.create" )->with( "success", "User Added Successfully" );
@@ -105,7 +105,7 @@ class UserController extends Controller {
                 'email'    => $data['email'],
                 'phone'    => $data['phone'],
                 'address'  => $data['address'],
-                'role'     => $data['address'],
+                'role'     => $data['role'],
             ] );
         }else{
             $user->update( [
@@ -114,7 +114,7 @@ class UserController extends Controller {
                 'password' => Hash::make( $data['password'] ),
                 'phone'    => $data['phone'],
                 'address'  => $data['address'],
-                'role'     => $data['address'],
+                'role'     => $data['role'],
             ] );
         }      
 

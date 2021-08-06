@@ -33,6 +33,7 @@ Route::middleware( ['auth'] )->group( function () {
     Route::resource( 'orders', OrderController::class );
 
     Route::get( 'order', [OrderController::class, 'makeOrder'] )->name( 'order' );
+    Route::get( 'user/{user}/orders', [OrderController::class, 'individual'] )->name( 'user.order' );
 
     Route::resource( 'account', AccountController::class );
     Route::resource( 'user', UserController::class );

@@ -4,5 +4,4 @@
 
     @livewire('order.all-orders')
     
-
 @endsection
