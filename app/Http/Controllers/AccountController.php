@@ -6,13 +6,17 @@ use Illuminate\Http\Request;
 
 class AccountController extends Controller {
 
+    public function __construct() {
+        $this->middleware("isAdmin")->only(['index']);
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        return view("account.all-account");
+        return view( "account.all-account" );
     }
 
     /**
@@ -21,7 +25,7 @@ class AccountController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        return view("account.create-account");
+        return view( "account.create-account" );
     }
 
     /**

@@ -33,8 +33,8 @@ class AllAccounts extends Component {
     }
 
     public function modalDelete() {
-        
-        Account::find($this->deleteConfirm)->delete();
+
+        Account::find( $this->deleteConfirm )->delete();
 
         $this->mount();
     }
@@ -46,14 +46,14 @@ class AllAccounts extends Component {
             $to   = Carbon::createFromFormat( "Y-m-d", $this->to );
 
             return view( 'livewire.account.all-accounts', [
-                'allAccounts' => Account::whereBetween( 'created_at', [$from, $to] )->orderByDesc("id")->paginate( 15 ),
+                'allAccounts' => Account::whereBetween( 'created_at', [$from, $to] )->orderByDesc( "id" )->paginate( 15 ),
                 'plus'        => Account::whereBetween( 'created_at', [$from, $to] )->where( 'pm', 'Plus' )->sum( 'value' ),
                 'minus'       => Account::whereBetween( 'created_at', [$from, $to] )->where( 'pm', 'Minus' )->sum( 'value' ),
             ] );
 
         } else {
             return view( 'livewire.account.all-accounts', [
-                'allAccounts' => Account::whereDate( 'created_at', Carbon::today() )->orderByDesc("id")->paginate( 15 ),
+                'allAccounts' => Account::whereDate( 'created_at', Carbon::today() )->orderByDesc( "id" )->paginate( 15 ),
                 'plus'        => Account::whereDate( 'created_at', Carbon::today() )->where( 'pm', 'Plus' )->sum( 'value' ),
                 'minus'       => Account::whereDate( 'created_at', Carbon::today() )->where( 'pm', 'Minus' )->sum( 'value' ),
             ] );

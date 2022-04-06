@@ -48,7 +48,119 @@
                             </div>
 
                         </div>
+
+                        <div class="row px-3">
+                            <h4 class="my-4">Available Products</h4>
+                            <div class="accordion w-100" id="accordionExample">
+
+                                @forelse ($products as $product)
+                                    
+                                    <div class="card">
+                                        <div class="card-header" id="headingOne">
+                                            <h2 class="mb-0">
+                                            <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse-{{ $product->id }}" aria-expanded="true" aria-controls="collapseOne">
+                                                <b class="text-dark">{{ $product->name }}</b>
+                                            </button>
+                                            </h2>
+                                        </div>
+                                
+                                        <div id="collapse-{{ $product->id }}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Model Name</th>
+                                                            <th>Stock</th>
+                                                        </tr>
+                                                    </thead>
+                                                    @forelse ($product->attributes as $attribute)
+                                                        <tr>
+                                                            <td>{{ $attribute->value }}</td>
+                                                            <td>{{ $attribute->quantity }}</td>
+                                                        </tr>
+                                                    @empty
+                                                        No Attributes Found
+                                                    @endforelse
+                                                    
+                                                </table>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                @empty
+                                    No Products Found
+                                @endforelse
+
+
+                              </div>
+                        </div>
                     @else
+
+                        @if ( auth()->user()->role == "Admin" )
+                            
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <h3>Overview</h3>
+                                </div>
+                            </div>
+                            <div class="row">
+    
+                                <div class="col-sm mt-3">
+                                    <div class="card border-success">
+                                        <div class="card-body">
+                                        <h5 class="card-title">Total Clients</h5>
+                                        <p class="card-text"><b>{{ $clients }}</b></p>
+                                        </div>
+                                    </div>
+                                </div>
+    
+                                <div class="col-sm mt-3">
+                                    <div class="card border-success">
+                                        <div class="card-body">
+                                        <h5 class="card-title">Order Revenue</h5>
+                                        <p class="card-text">{{ $montlyOrderRevenue }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+    
+                                <div class="col-sm mt-3">
+                                    <div class="card border-info">
+                                        <div class="card-body">
+                                        <h5 class="card-title">Monthly Expense</h5>
+                                        <p class="card-text">{{ $montlyExpense }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+    
+                                <div class="col-sm mt-3">
+                                    <div class="card border-danger">
+                                        <div class="card-body">
+                                        <h5 class="card-title">Due</h5>
+                                        <p class="card-text">{{ $due }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+    
+                                <div class="col-sm mt-3">
+                                    <div class="card border-danger">
+                                        <div class="card-body">
+                                        <h5 class="card-title">Stock Out</h5>
+                                        <p class="card-text">{{ $outOfStock }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+    
+                            </div>
+                        @endif
+
+
+
+                        <div class="row mt-4">
+                            <div class="col">
+                                <h3>Pages</h3>
+                            </div>
+                        </div>
+
                         <div class="row">
 
                             <div class="col-sm-4 mt-3">
@@ -61,15 +173,17 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-4 mt-3">
-                                <div class="card border-secondary">
-                                    <div class="card-body">
-                                    <h5 class="card-title">Accounts</h5>
-                                    <p class="card-text">Manage your account</p>
-                                    <a href="{{ route('account.index') }}" class="btn btn-secondary">Accounts</a>
+                            @if ( auth()->user()->role == "Admin" )
+                                <div class="col-sm-4 mt-3">
+                                    <div class="card border-secondary">
+                                        <div class="card-body">
+                                        <h5 class="card-title">Accounts</h5>
+                                        <p class="card-text">Manage your account</p>
+                                        <a href="{{ route('account.index') }}" class="btn btn-secondary">Accounts</a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endif
 
                             <div class="col-sm-4 mt-3">
                                 <div class="card border-primary">

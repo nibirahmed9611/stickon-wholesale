@@ -17,9 +17,14 @@
     @livewireStyles
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/dropify.min.css') }}" rel="stylesheet">
+    @stack('styles') 
     <style>
         .opacity-5{
             opacity: .5;
+        }
+        .ce-dis{
+            pointer-events: none;
+            opacity: 0.8;
         }
     </style>
 </head>
@@ -38,17 +43,18 @@
                     <!-- Left Side Of Navbar -->
                     @if ( auth()->check() )
                         <ul class="navbar-nav mr-auto">
-                            @if ( auth()->user()->role == "Admin" || auth()->user()->role == "Viewer" )
-                            <li class="navbar-item"><a href="{{ route('product.index') }}" class="navbar-link mx-3 text-dark">Products</a></li>
-                            <li class="navbar-item"><a href="{{ route('user.index') }}" class="navbar-link mx-3 text-dark">Users</a></li>
+                            @if ( auth()->user()->role == "Admin" || auth()->user()->role == "Employee" )
+                                <li class="navbar-item"><a href="{{ route('product.index') }}" class="navbar-link mx-3 text-dark">Products</a></li>
+                                <li class="navbar-item"><a href="{{ route('user.index') }}" class="navbar-link mx-3 text-dark">Users</a></li>
+                            @endif
+                            @if ( auth()->user()->role == "Admin" )
                                 <li class="navbar-item"><a href="{{ route('account.index') }}" class="navbar-link mx-3 text-dark">Accounts</a></li>
                             @endif
-
                             @if ( auth()->user()->role == "Customer" )
                                 <li class="navbar-item"><a href="{{ route('order') }}" class="navbar-link mx-3 text-dark">Order</a></li>
                             @endif
                             <li class="navbar-item"><a href="{{ route('orders.index') }}" class="navbar-link mx-3 text-dark">Orders</a></li>
-                            <li class="navbar-item"><a href="{{ route('refund.index') }}" class="navbar-link mx-3 text-dark">Refunds</a></li>
+                            <li class="navbar-item"><a href="{{ route('refund.index') }}" class="navbar-link mx-3 text-dark">Replacements</a></li>
                         </ul>
                     @endif
                     
@@ -105,7 +111,8 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="{{ asset('js/dropify.min.js') }}"></script>
-    @livewireScripts    
+    @livewireScripts   
+    @stack('scripts') 
     <script>
         $('.dropify').dropify();
     </script>

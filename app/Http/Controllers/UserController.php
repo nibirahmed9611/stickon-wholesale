@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller {
+
+    public function __construct() {
+        $this->middleware("isAdmin")->only(["edit","delete"]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -74,9 +79,9 @@ class UserController extends Controller {
     public function edit( User $user ) {
         // dd($user);
 
-        return view("user.edit-user",[
-            'user' => $user
-        ]);
+        return view( "user.edit-user", [
+            'user' => $user,
+        ] );
     }
 
     /**
@@ -89,25 +94,24 @@ class UserController extends Controller {
     public function update( Request $request, User $user ) {
         $data = $request->validate( [
             'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
+            'email'    => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
             'password' => ['nullable'],
             'address'  => ['required', 'string'],
             'role'     => ['nullable', 'string'],
             'phone'    => ['required'],
         ] );
 
-        
-        if( $data['password'] == null ){
-            unset($data['password']);
+        if ( $data['password'] == null ) {
+            unset( $data['password'] );
 
             $user->update( [
-                'name'     => $data['name'],
-                'email'    => $data['email'],
-                'phone'    => $data['phone'],
-                'address'  => $data['address'],
-                'role'     => $data['role'],
+                'name'    => $data['name'],
+                'email'   => $data['email'],
+                'phone'   => $data['phone'],
+                'address' => $data['address'],
+                'role'    => $data['role'],
             ] );
-        }else{
+        } else {
             $user->update( [
                 'name'     => $data['name'],
                 'email'    => $data['email'],
@@ -116,9 +120,9 @@ class UserController extends Controller {
                 'address'  => $data['address'],
                 'role'     => $data['role'],
             ] );
-        }      
+        }
 
-        return redirect()->route( "user.edit", ['user'=> $user->id] )->with( "success", "User Updated Successfully" );
+        return redirect()->route( "user.edit", ['user' => $user->id] )->with( "success", "User Updated Successfully" );
     }
 
     /**
@@ -130,6 +134,7 @@ class UserController extends Controller {
     public function destroy( User $user ) {
         $user->delete();
 
-        return redirect()->route('user.index')->with("delete","User Deleted Successfully");
+        return redirect()->route( 'user.index' )->with( "delete", "User Deleted Successfully" );
     }
+
 }

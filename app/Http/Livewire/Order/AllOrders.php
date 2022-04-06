@@ -3,11 +3,11 @@
 namespace App\Http\Livewire\Order;
 
 use App\Models\Order;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 
 class AllOrders extends Component {
 
@@ -15,7 +15,16 @@ class AllOrders extends Component {
 
     public $deleteConfirm;
 
+    public $from;
+
+    public $to;
+
     protected $paginationTheme = 'bootstrap';
+
+    protected $queryString = [
+        'from' => ["except" => ""],
+        'to'   => ["except" => ""],
+    ];
 
     public function delete( $id ) {
         $this->deleteConfirm = $id;
@@ -25,12 +34,16 @@ class AllOrders extends Component {
 
         $order = Order::find( $this->deleteConfirm );
 
-        foreach ($order->order_products as $order_product) {
-            if($order_product->image){
-                if(file_exists($order_product->image->path)){
-                    Storage::disk('public')->delete($order_product->image->path);
+        foreach ( $order->order_products as $order_product ) {
+
+            if ( $order_product->image ) {
+
+                if ( file_exists( $order_product->image->path ) ) {
+                    Storage::disk( 'public' )->delete( $order_product->image->path );
                 }
+
             }
+
             $order_product->delete();
         }
 
@@ -39,14 +52,34 @@ class AllOrders extends Component {
         $this->mount();
     }
 
+    public function reset_filter() {
+        return redirect()->route("orders.index");
+    }
+
     public function render() {
-        if( Auth::user()->role == "Admin" || Auth::user()->role == "Viewer"  ){
-            $allOrders = Order::orderByDesc( 'id' )->paginate( 15 );
-        }else{
+
+        if ( Auth::user()->role == "Admin" || Auth::user()->role == "Employee" ) {
+
+            if ( $this->from && $this->to ) {
+                $from = Carbon::createFromFormat( "Y-m-d", $this->from );
+                $to   = Carbon::createFromFormat( "Y-m-d", $this->to );
+
+                $allOrders = Order::whereBetween( "created_at", [$from, $to] )
+                    ->orderByDesc( 'id' )
+                    ->paginate( 15 );
+            } else {
+                $allOrders = Order::whereMonth( "created_at", Carbon::today() )
+                    ->orderByDesc( 'id' )
+                    ->paginate( 15 );
+            }
+
+        } else {
             $allOrders = Auth::user()->order()->orderByDesc( 'id' )->paginate( 15 );
         }
+
         return view( 'livewire.order.all-orders', [
-            'allOrders' =>$allOrders,
+            'allOrders' => $allOrders,
         ] );
     }
+
 }

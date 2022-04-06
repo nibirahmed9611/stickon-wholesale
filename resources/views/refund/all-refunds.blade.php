@@ -67,7 +67,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6">{{ __('No Replacement Found') }}</td>
+                                    <td colspan="7">{{ __('No Replacement Found') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>

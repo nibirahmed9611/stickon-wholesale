@@ -88,7 +88,7 @@
                                 <select name="role" class="form-control">
                                     <option value="Customer">Admin</option>
                                     <option value="Customer">Customer</option>
-                                    <option value="Customer">Viewer</option>
+                                    <option value="Employee">Employee</option>
                                 </select>
 
                                 @error('role')

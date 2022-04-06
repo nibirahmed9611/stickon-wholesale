@@ -15,7 +15,7 @@ class RefundController extends Controller {
      */
     public function index() {
 
-        if( Auth::user()->role == "Admin" || Auth::user()->role == "Viewer" ){
+        if( Auth::user()->role == "Admin" || Auth::user()->role == "Employee" ){
             $refunds = Refund::orderByDesc( 'id' )->paginate( 15 );
         }else{
             $refunds = Auth::user()->refund()->paginate( 15 );

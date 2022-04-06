@@ -23,6 +23,8 @@ class MakeOrder extends Component {
 
     public $orderProducts;
 
+    public $comment;
+
     /**
      *
      * Initializes the component
@@ -57,18 +59,24 @@ class MakeOrder extends Component {
 
     }
 
+    public function remove( $index ) {
+        unset($this->orderProducts[$index]);
+        array_values($this->orderProducts);
+    }
+
     public function updatedOrderProducts() {
 
-        foreach ($this->orderProducts as $key => $orderedProduct) {
-            $product = Product::findOrFail($orderedProduct['product']);
+        foreach ( $this->orderProducts as $key => $orderedProduct ) {
+            $product = Product::findOrFail( $orderedProduct['product'] );
 
-            $attributes = $product->attributes()->pluck('id')->toArray();
+            $attributes = $product->attributes()->pluck( 'id' )->toArray();
 
-            if( !in_array($orderedProduct['attribute'],$attributes) ){
+            if ( ! in_array( $orderedProduct['attribute'], $attributes ) ) {
                 $this->orderProducts[$key]['attribute'] = "null";
             }
+
         }
-        
+
     }
 
     /**
@@ -79,6 +87,11 @@ class MakeOrder extends Component {
      *
      */
     public function order() {
+
+        
+        $data = $this->validate([
+            "comment" => "nullable",
+        ]);
 
         // Showing error message of the stock and showing the error message of all attributes checked
 
@@ -93,7 +106,7 @@ class MakeOrder extends Component {
 
         }
 
-        // Check the stock
+// Check the stock
 
         foreach ( $this->orderProducts as $orderProduct ) {
             $attribute = Attribute::findOrFail( $orderProduct['attribute'] );
@@ -120,8 +133,7 @@ class MakeOrder extends Component {
 
         }
 
-
-        DB::transaction( function () use ( $totalPrice ) {
+        DB::transaction( function () use ( $totalPrice, $data ) {
 
             // Make an order
             $order = Order::create( [
@@ -132,9 +144,10 @@ class MakeOrder extends Component {
                 'paid'     => 0,
                 'due'      => $totalPrice,
                 'status'   => "Pending Payment",
+                'comment'   => $data['comment'],
             ] );
 
-            // Assign all the products to the order and transfer the images
+// Assign all the products to the order and transfer the images
 
             foreach ( $this->orderProducts as $orderedProduct ) {
 
@@ -143,11 +156,22 @@ class MakeOrder extends Component {
                     'product_id'   => $orderedProduct['product'],
                     'attribute_id' => $orderedProduct['attribute'],
                     'quantity'     => $orderedProduct['quantity'],
-                    'staus'        => "Processing",
+                    'status'       => "Processing",
                 ] );
 
                 if ( $orderedProduct['photo'] ) {
-                    $uploadedPhoto = $orderedProduct['photo']->store( 'photos', 'public' );
+                    $product   = Product::find( $orderProduct->product_id );
+                    $attribute = Attribute::find( $orderProduct->attribute_id );
+                    $imageName = $product->name . "-" . $attribute->value . "." . $orderedProduct['photo']->extension();
+                    $imageName = str_replace( " ", "-", $imageName );
+
+                    $uploadedPhoto = $orderedProduct['photo']
+                        ->storeAs(
+                            'photos/' . $order->id,
+                            $imageName
+                        );
+
+                    // dd($uploadedPhoto);
 
                     Media::create( [
                         'order_product_id' => $orderProduct->id,
@@ -157,7 +181,7 @@ class MakeOrder extends Component {
 
             }
 
-            // Remove from stock
+// Remove from stock
 
             foreach ( $this->orderProducts as $p ) {
 
@@ -182,9 +206,11 @@ class MakeOrder extends Component {
         session()->flash( 'success', "Your order has been places successfully" );
 
         $this->mount();
+        $this->comment = "";
     }
 
     public function render() {
+        $this->dispatchBrowserEvent( 'rerendered' );
         return view( 'livewire.order.make-order' );
     }
 

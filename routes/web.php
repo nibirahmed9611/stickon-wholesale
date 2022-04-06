@@ -33,6 +33,7 @@ Route::middleware( ['auth'] )->group( function () {
     Route::resource( 'orders', OrderController::class );
 
     Route::get( 'order', [OrderController::class, 'makeOrder'] )->name( 'order' );
+    Route::get( 'download/order/{order}/product-images', [OrderController::class, 'download_prodcut_images'] )->name( 'order.download-product-images' );
     Route::get( 'user/{user}/orders', [OrderController::class, 'individual'] )->name( 'user.order' );
 
     Route::resource( 'account', AccountController::class );
@@ -40,11 +41,18 @@ Route::middleware( ['auth'] )->group( function () {
     Route::resource( 'refund', RefundController::class );
 
     Route::patch( 'update-order-products/{order_product}', function ( Request $request, OrderProduct $order_product ) {
+
+        if ( $request->status == "Declined" ) {
+            if( $order_product->attribute ){
+                $order_product->attribute->increment( "quantity", (int) $order_product->quantity );
+            }
+        }
+
         $order_product->update( [
             'status' => $request->status,
         ] );
-            // dd($request->status);
-        return redirect()->back()->with('updated','Status updated successfully');
+        // dd($request->status);
+        return redirect()->back()->with( 'updated', 'Status updated successfully' );
 
     } )->name( 'update.order.products' );
 } );

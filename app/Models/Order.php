@@ -21,6 +21,8 @@ class Order extends Model {
         'paid',
         'due',
         'status',
+        'comment',
+        'is_seen',
     ];
 
     /**

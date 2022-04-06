@@ -8,7 +8,15 @@
                 </div>
             @endif
             <div class="card">
-                <div class="card-header"><b>{{ __('All Products') }}</b></div>
+                <div class="card-header">
+                    <b>Order ID - {{ $order['id'] }}</b>
+                    <b class="ml-3">
+                        <a href="{{ route("order.download-product-images",['order'=>$order['id']]) }}"
+                            onclick="return confirm('Download all product images?')">
+                            Download All Images
+                        </a>
+                    </b>
+                </div>
 
                 <div class="card-body">
                     
@@ -31,12 +39,12 @@
                                 <th>Update</th>
                             </tr>
                         </thead>
-                        
+
                         <tbody>
                             @forelse ($orderProducts as $orderProduct)
                                 <tr>
-
-                                    <td>{!! $orderProduct->image ? "<a target='_blank' href=". asset( 'storage/' . $orderProduct->image->path ) ."> <img src=" . asset( 'storage/' . $orderProduct->image->path ) . " width='100px' /> </a>"   : "Not Found" !!}</td>
+                                    {{-- {{ dd(Storage::url($orderProduct->image->path)) }} --}}
+                                    <td>{!! $orderProduct->image ? "<a target='_blank' href=". Storage::url($orderProduct->image->path) . "> <img src=" . Storage::url($orderProduct->image->path) . " width='100px' /> </a>"   : "Not Found" !!}</td>
                                     <td>{{ $orderProduct->product ? $orderProduct->product->name : "Not Found" }}</td>
                                     <td>{{ $orderProduct->attribute ? $orderProduct->attribute->value : "Not Found" }}</td>
                                     <td>{{ $orderProduct->quantity ?? "Not Found" }}</td>
@@ -45,7 +53,7 @@
                                         @csrf
                                         @method("PATCH")
                                         <td>
-                                            <select @if ( auth()->user()->role == "Viewer" ) disabled @endif class="form-control" name="status">
+                                            <select @if ( auth()->user()->role == "Viewer" || auth()->user()->role == "Customer" ) disabled @endif class="form-control" name="status">
                                                 <option @if( $orderProduct->status == "Processing" ) selected @endif value="Processing">Processing</option>
                                                 <option @if( $orderProduct->status == "Completed" ) selected @endif value="Completed">Completed</option>
                                                 <option @if( $orderProduct->status == "Declined" ) selected @endif value="Declined">Declined</option>
@@ -67,7 +75,12 @@
                     </table>
 
                     <div class="row">
-                        <div class="col-md"></div>
+                        <div class="col-md">
+                            @if ( $order['comment'] )
+                                <h2 class="mt-3">Order Message</h2>
+                                {{ $order['comment'] }}
+                            @endif
+                        </div>
                         <div class="col-md">
                             @if (session()->has('saved'))
                                 <div class="alert alert-success alert-dismissible fade show" role="alert">

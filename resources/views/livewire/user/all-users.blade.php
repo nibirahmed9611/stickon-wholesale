@@ -37,11 +37,24 @@
                                 <th>Address</th>
                                 <th>Role</th>
                                 <th>Joined</th>
-                                <th>Edit</th>
                                 <th>Delete</th>
+                                <th>Edit</th>
                                 <th>Orders</th>
                             </tr>
                         </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Address</th>
+                                <th>Role</th>
+                                <th>Joined</th>
+                                <th>Delete</th>
+                                <th>Edit</th>
+                                <th>Orders</th>
+                            </tr>
+                        </tfoot>
                         
                         <tbody>
                             @forelse ($allUsers as $user)

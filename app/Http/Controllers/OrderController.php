@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use ZipArchive;
 
 class OrderController extends Controller {
 
@@ -20,10 +22,11 @@ class OrderController extends Controller {
     public function individual( User $user ) {
         // dd($user->order);
 
-        return view('order.individual-user-order',[
-            'allOrders' => $user->order()->paginate(15)
-        ]);
+        return view( 'order.individual-user-order', [
+            'allOrders' => $user->order()->paginate( 15 ),
+        ] );
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -53,14 +56,53 @@ class OrderController extends Controller {
     }
 
     /**
+     * Dowload order product images
+     *
+     * @param $order
+     * @return void
+     */
+    public function download_prodcut_images( Order $order ) {
+        $zip        = new ZipArchive();
+        $zipcreated = Storage::path( $order->id . ".zip" );
+
+        if ( $zip->open( $zipcreated, \ZipArchive::CREATE | \ZipArchive::OVERWRITE ) ) {
+
+            foreach ( $order->order_products as $product ) {
+
+                if ( $product->image ) {
+                    $nameParts = explode( "/", $product->image->path );
+                    $name      = $nameParts[array_key_last( $nameParts )]; // Get the last part of the name from the link like /path/to/file.php returns file.php
+                    $zip->addFile( Storage::path( $product->image->path ), $name );
+                }
+
+            }
+
+        }
+
+        $zip->close();
+
+        return response()->download( $zipcreated )->deleteFileAfterSend( true );
+
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show( $id ) {
+        $order = Order::findOrFail( $id );
+        if ( auth()->user()->role == "Admin" ) {
+            if ( $order->is_seen == 0 ) {
+                $order->update( [
+                    "is_seen" => 1,
+                ] );
+            }
+        }
+
         return view( "order-products.order-products", [
-            'orderID' => $id,
+            'orderID' => $order->id,
         ] );
     }
 
@@ -95,6 +137,7 @@ class OrderController extends Controller {
 
         $order->delete();
 
-        return redirect()->route('user.order',['user'=>$order->user->id])->with('deleted','Deleted Successfully');
+        return redirect()->route( 'user.order', ['user' => $order->user->id] )->with( 'deleted', 'Deleted Successfully' );
     }
+
 }

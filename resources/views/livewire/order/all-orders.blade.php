@@ -8,7 +8,24 @@
                 </div>
             @endif
             <div class="card">
-                <div class="card-header"><b>{{ __('All Orders') }}</b></div>
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-3 pt-4">
+                            <b>{{ __('All Orders') }}</b>
+                        </div>
+                        <div class="col-md-4">
+                            <label><b>From</b></label>
+                            <input wire:model="from" type="date" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label><b>To</b></label>
+                            <input wire:model="to" type="date" class="form-control">
+                        </div>
+                        <div class="col-md-1 mt-4">
+                            <button wire:click="reset_filter" class="btn btn-primary">Reset</button>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="card-body">
                     
@@ -22,6 +39,7 @@
                     <table class="table table-striped table-bordered table-hover table-responsive-md">
                         <thead>
                             <tr>
+                                <th>Order ID</th>
                                 <th>Done By</th>
                                 <th>Subtotal</th>
                                 <th>Discount</th>
@@ -38,7 +56,14 @@
                         <tbody>
                             @forelse ($allOrders as $order)
                                 <tr>
-                                    <td>{!! $order->user ? "<a href=". route("user.edit",['user'=> $order->user->id]) . ">" . $order->user->name . "</a>"  : 'Not found' !!}</td>
+                                    <td>{{ $order->id }}</td>
+                                    <td>
+                                        @if (auth()->user()->role == "Admin")
+                                            {!! $order->user ? "<a href=". route("user.edit",['user'=> $order->user->id]) . ">" . $order->user->name . "</a>"  : 'Not found' !!}
+                                        @else
+                                            {!! $order->user ? $order->user->name : 'Not found' !!}                        
+                                        @endif
+                                    </td>
                                     <td>{{ $order->subtotal ?? '' }}</td>
                                     <td>{{ $order->discount  ?? '' }}</td>
                                     <td>{{ $order->total ?? '' }}</td>
@@ -46,7 +71,17 @@
                                     <td>{{ $order->due ?? '' }}</td>
                                     <td>{{ $order->status ?? '' }}</td>
                                     <td>{{ $order->created_at->format("d-M-Y | h:i a") }}</td>
-                                    <td><a class="btn btn-primary" href="{{ route('orders.show',['order'=>$order->id]) }}">Show</a></td>
+                                    <td>
+                                        @if ( auth()->user()->role == "Admin" || auth()->user()->role == "Employee" )
+                                            @if ( $order->is_seen )
+                                                <a class="btn btn-success" href="{{ route('orders.show',['order'=>$order->id]) }}">Show</a>
+                                            @else
+                                                <a class="btn btn-primary" href="{{ route('orders.show',['order'=>$order->id]) }}">Show</a>
+                                            @endif
+                                        @else
+                                            <a class="btn btn-primary" href="{{ route('orders.show',['order'=>$order->id]) }}">Show</a>
+                                        @endif
+                                    </td>
                                     <td>
                                         @if ( auth()->user()->role == "Admin" )
                                             <button class="btn btn-danger" wire:click="delete({{ $order->id }})" data-toggle="modal" data-target="#exampleModal">Delete</button>

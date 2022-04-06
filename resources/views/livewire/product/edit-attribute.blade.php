@@ -45,9 +45,11 @@
                                     <td class="text-center">
                                         <button wire:click.prevent="edit({{ $i }})" class="btn btn-primary">Update</button>
                                     </td>
-                                    <td class="text-center">
-                                        <button wire:click.prevent="delete({{ $attribute['id'] }})" class="btn btn-danger">Delete</button>
-                                    </td>
+                                    @if ( auth()->user()->role == "Admin" )
+                                        <td class="text-center">
+                                            <button wire:click.prevent="delete({{ $attribute['id'] }})" class="btn btn-danger">Delete</button>
+                                        </td>
+                                    @endif
                                 @else
                                     <td colspan="2">Not Updated Yet</td>
                                 @endif
