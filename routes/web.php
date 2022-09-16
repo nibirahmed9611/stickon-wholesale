@@ -5,6 +5,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RefundController;
 use App\Http\Controllers\UserController;
+use App\Http\Livewire\Dashboard;
 use App\Models\OrderProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +29,7 @@ Route::get( '/', function () {
 Auth::routes();
 
 Route::middleware( ['auth'] )->group( function () {
-    Route::get( '/home', [App\Http\Controllers\HomeController::class, 'index'] )->name( 'home' );
+    Route::get( '/home', Dashboard::class )->name( 'home' );
     Route::resource( 'product', ProductController::class );
     Route::resource( 'orders', OrderController::class );
 

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+{{-- <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
@@ -54,7 +54,7 @@
                             <div class="accordion w-100" id="accordionExample">
 
                                 @forelse ($products as $product)
-                                    
+
                                     <div class="card">
                                         <div class="card-header" id="headingOne">
                                             <h2 class="mb-0">
@@ -63,7 +63,7 @@
                                             </button>
                                             </h2>
                                         </div>
-                                
+
                                         <div id="collapse-{{ $product->id }}" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                                             <div class="card-body">
                                                 <table class="table">
@@ -81,9 +81,9 @@
                                                     @empty
                                                         No Attributes Found
                                                     @endforelse
-                                                    
+
                                                 </table>
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -97,14 +97,14 @@
                     @else
 
                         @if ( auth()->user()->role == "Admin" )
-                            
+
                             <div class="row mt-2">
                                 <div class="col">
                                     <h3>Overview</h3>
                                 </div>
                             </div>
                             <div class="row">
-    
+
                                 <div class="col-sm mt-3">
                                     <div class="card border-success">
                                         <div class="card-body">
@@ -113,7 +113,7 @@
                                         </div>
                                     </div>
                                 </div>
-    
+
                                 <div class="col-sm mt-3">
                                     <div class="card border-success">
                                         <div class="card-body">
@@ -122,7 +122,7 @@
                                         </div>
                                     </div>
                                 </div>
-    
+
                                 <div class="col-sm mt-3">
                                     <div class="card border-info">
                                         <div class="card-body">
@@ -131,7 +131,7 @@
                                         </div>
                                     </div>
                                 </div>
-    
+
                                 <div class="col-sm mt-3">
                                     <div class="card border-danger">
                                         <div class="card-body">
@@ -140,7 +140,7 @@
                                         </div>
                                     </div>
                                 </div>
-    
+
                                 <div class="col-sm mt-3">
                                     <div class="card border-danger">
                                         <div class="card-body">
@@ -149,7 +149,7 @@
                                         </div>
                                     </div>
                                 </div>
-    
+
                             </div>
                         @endif
 
@@ -217,11 +217,11 @@
 
                         </div>
                     @endif
-                    
+
 
                 </div>
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 @endsection
