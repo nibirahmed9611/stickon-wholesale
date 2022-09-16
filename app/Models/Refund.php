@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Refund extends Model {
 
@@ -16,4 +17,13 @@ class Refund extends Model {
     ];
 
     use HasFactory;
+
+    /**
+     * Get the user that owns the Refund
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): BelongsTo {
+        return $this->belongsTo( User::class );
+    }
 }

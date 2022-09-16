@@ -20,14 +20,14 @@
                 <div class="card-header"><b>{{ __('All Users') }}</b></div>
 
                 <div class="card-body">
-                    
+
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
                         </div>
                     @endif
 
-                    
+
                     <table class="table table-responsive-md table-striped table-bordered table-hover">
                         <thead>
                             <tr>
@@ -37,6 +37,9 @@
                                 <th>Address</th>
                                 <th>Role</th>
                                 <th>Joined</th>
+                                <th>Total Order</th>
+                                <th>Paid</th>
+                                <th>Due</th>
                                 <th>Delete</th>
                                 <th>Edit</th>
                                 <th>Orders</th>
@@ -50,12 +53,15 @@
                                 <th>Address</th>
                                 <th>Role</th>
                                 <th>Joined</th>
+                                <th>Total Order</th>
+                                <th>Paid</th>
+                                <th>Due</th>
                                 <th>Delete</th>
                                 <th>Edit</th>
                                 <th>Orders</th>
                             </tr>
                         </tfoot>
-                        
+
                         <tbody>
                             @forelse ($allUsers as $user)
                                 <tr>
@@ -65,6 +71,9 @@
                                     <td>{{ $user->address ?? "" }}</td>
                                     <td>{{ $user->role ?? "" }}</td>
                                     <td>{{ $user->created_at ? $user->created_at->format("d-M-Y") : "Not Found" }}</td>
+                                    <td>{{ $user->order ? $user->order->sum('total') : '-' }}</td>
+                                    <td>{{ $user->order ? $user->order->sum('paid') : '-' }}</td>
+                                    <td>{{ $user->order ? $user->order->sum('due') : '-' }}</td>
                                     <td>
                                         @if ( auth()->user()->role == "Admin" )
                                             <form action="{{ route("user.destroy",['user'=>$user->id]) }}" method="POST">

@@ -14,7 +14,7 @@ class AllUsers extends Component {
 
     public function render() {
         return view( 'livewire.user.all-users',[
-            'allUsers' => User::orderByDesc('id')->paginate(15),
+            'allUsers' => User::with('order')->orderByDesc('id')->paginate(15),
         ] );
     }
 }

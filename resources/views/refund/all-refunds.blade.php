@@ -23,14 +23,14 @@
                 <div class="card-header"><b>{{ __('All replacement requests') }}</b></div>
 
                 <div class="card-body">
-                    
+
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
                         </div>
                     @endif
 
-                    
+
                     <table class="table table-responsive-md table-striped table-bordered table-hover">
                         <thead>
                             <tr>
@@ -39,11 +39,12 @@
                                 <th>Image</th>
                                 <th>Status</th>
                                 <th>Applied at</th>
+                                <th>Applied by</th>
                                 <th>Action</th>
                                 <th>Delete</th>
                             </tr>
                         </thead>
-                        
+
                         <tbody>
                             @forelse ($allRefunds as $refund)
                                 <tr>
@@ -52,6 +53,7 @@
                                     <td>{!! $refund->image ? "<a target='_blank' href=". asset( 'storage/' . $refund->image ) ."><img width='100px' src=". asset( 'storage/' . $refund->image ) ."></a>" : "Not Found" !!}</td>
                                     <td>{{ $refund->status ?? "" }}</td>
                                     <td>{{ $refund->created_at ? $refund->created_at->format("d-M-Y") : "Not Found" }}</td>
+                                    <td> <a href="{{ route('user.edit',['user'=>$refund->user->id]) }}">{{ $refund->user->name }}</a></td>
                                     <td><a class="btn btn-primary" href="{{ route("refund.show",['refund'=>$refund->id]) }}">Show</a></td>
                                     <td>
                                         @if ( auth()->user()->role == "Admin" )
